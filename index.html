@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Sept 1 Shred</title>
+<meta name="theme-color" content="#141312">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23ED125F'/%3E%3Ctext x='50' y='68' font-size='52' font-weight='800' font-family='Arial' fill='white' text-anchor='middle'%3ES1%3C/text%3E%3C/svg%3E">
+<style>
+  :root{
+    --bg:#141312; --card:#1e1c1b; --card2:#262322; --line:#33302e;
+    --ink:#f2efec; --dim:#8d8782; --pink:#ED125F; --pink-dark:#a30d42;
+    --done:#2fae6e; --amber:#e8a13c;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;min-height:100vh;padding-bottom:90px}
+  header{padding:18px 16px 6px}
+  .kicker{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--pink);font-weight:700}
+  h1{font-size:26px;font-weight:800;letter-spacing:-.02em;margin-top:2px}
+  .countdown{font-size:13px;color:var(--dim);margin-top:2px}
+  .countdown b{color:var(--ink)}
+
+  .days{display:flex;gap:8px;padding:14px 16px 4px;overflow-x:auto;scrollbar-width:none}
+  .days::-webkit-scrollbar{display:none}
+  .day-chip{flex:0 0 auto;background:var(--card);border:1px solid var(--line);color:var(--dim);
+    border-radius:14px;padding:10px 14px;font-size:13px;font-weight:700;cursor:pointer;position:relative}
+  .day-chip.active{background:var(--pink);border-color:var(--pink);color:#fff}
+  .day-chip .sub{display:block;font-size:10px;font-weight:600;opacity:.75;margin-top:1px}
+  .day-chip .dot{position:absolute;top:6px;right:8px;width:7px;height:7px;border-radius:50%;background:var(--done);display:none}
+  .day-chip.complete .dot{display:block}
+
+  .progress-wrap{padding:12px 16px 4px}
+  .progress-label{display:flex;justify-content:space-between;font-size:12px;color:var(--dim);margin-bottom:6px}
+  .progress-label b{color:var(--ink)}
+  .bar{height:10px;background:var(--card);border-radius:6px;overflow:hidden;border:1px solid var(--line)}
+  .fill{height:100%;width:0%;background:linear-gradient(90deg,var(--pink-dark),var(--pink));border-radius:6px;transition:width .35s cubic-bezier(.2,.8,.2,1)}
+  .fill.full{background:linear-gradient(90deg,#1f7a4d,var(--done))}
+  .banner{display:none;margin:10px 16px 0;padding:12px 14px;border-radius:12px;background:rgba(47,174,110,.12);
+    border:1px solid rgba(47,174,110,.4);color:var(--done);font-weight:700;font-size:14px;text-align:center}
+  .banner.show{display:block}
+
+  .section-tag{padding:16px 16px 6px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);font-weight:700}
+  .list{padding:0 12px}
+  .ex{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);
+    border-radius:14px;padding:14px;margin-bottom:8px;cursor:pointer;user-select:none;transition:background .15s,border-color .15s}
+  .ex:active{background:var(--card2)}
+  .ex.done{border-color:rgba(47,174,110,.45);background:rgba(47,174,110,.07)}
+  .check{flex:0 0 auto;width:28px;height:28px;border-radius:9px;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;transition:all .15s}
+  .ex.done .check{background:var(--done);border-color:var(--done)}
+  .check svg{width:16px;height:16px;stroke:#fff;stroke-width:3;fill:none;opacity:0;transform:scale(.5);transition:all .15s}
+  .ex.done .check svg{opacity:1;transform:scale(1)}
+  .ex-body{flex:1;min-width:0}
+  .ex-name{font-size:15px;font-weight:600;line-height:1.25}
+  .ex.done .ex-name{color:var(--dim);text-decoration:line-through;text-decoration-color:rgba(141,135,130,.6)}
+  .ex-meta{font-size:12px;color:var(--dim);margin-top:2px}
+  .ex-note{font-size:11px;color:var(--amber);margin-top:2px}
+  .scheme{flex:0 0 auto;font-size:13px;font-weight:800;color:var(--pink);letter-spacing:.02em;white-space:nowrap}
+  .ex.done .scheme{color:var(--dim)}
+
+  .footer-actions{padding:14px 16px 8px;display:flex;gap:10px}
+  .btn{flex:1;padding:13px;border-radius:12px;border:1px solid var(--line);background:var(--card);
+    color:var(--dim);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
+  .btn:active{background:var(--card2)}
+
+  .weigh{margin:8px 16px 0;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
+  .weigh-row{display:flex;align-items:center;gap:10px}
+  .weigh-row input{flex:1;background:var(--bg);border:1px solid var(--line);border-radius:10px;color:var(--ink);
+    font-size:16px;padding:11px 12px;font-family:inherit;min-width:0}
+  .weigh-row input:focus{outline:none;border-color:var(--pink)}
+  .btn-pink{flex:0 0 auto;background:var(--pink);border:none;color:#fff;padding:11px 18px;border-radius:10px;font-weight:800;font-size:14px;cursor:pointer;font-family:inherit}
+  .btn-pink:active{background:var(--pink-dark)}
+  .weigh-status{font-size:12px;color:var(--dim);margin-top:8px;line-height:1.5}
+  .weigh-status b{color:var(--ink)}
+  .weigh-status .good{color:var(--done);font-weight:700}
+  .weigh-status .over{color:var(--amber);font-weight:700}
+
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(80px);background:var(--card2);
+    border:1px solid var(--line);color:var(--ink);padding:11px 18px;border-radius:12px;font-size:13px;font-weight:600;
+    transition:transform .3s;z-index:50;white-space:nowrap}
+  .toast.show{transform:translateX(-50%) translateY(0)}
+  @media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header>
+  <div class="kicker">September 1 Shred</div>
+  <h1 id="day-title">Day 1 — Chest &amp; Triceps</h1>
+  <div class="countdown" id="countdown"></div>
+</header>
+
+<div class="days" id="day-chips"></div>
+
+<div class="progress-wrap">
+  <div class="progress-label"><span>Session progress</span><b id="prog-text">0 / 0</b></div>
+  <div class="bar"><div class="fill" id="prog-fill"></div></div>
+</div>
+<div class="banner" id="banner">Session complete. Go eat protein.</div>
+
+<div id="exercise-area"></div>
+
+<div class="footer-actions">
+  <button class="btn" id="reset-btn">Reset today's session</button>
+</div>
+
+<div class="section-tag">Friday weigh-in</div>
+<div class="weigh">
+  <div class="weigh-row">
+    <input type="number" inputmode="decimal" step="0.1" id="weight-input" placeholder="Weight (kg)">
+    <button class="btn-pink" id="weight-save">Log</button>
+  </div>
+  <div class="weigh-status" id="weigh-status">Loading…</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const PLAN = [
+  {short:'Chest/Tri', title:'Day 1 — Chest & Triceps', groups:[
+    {tag:'Warm-up', items:[ {n:'Bike', s:'10–15 min'} ]},
+    {tag:'Chest', items:[
+      {n:'Dumbbell Bench Press', s:'4×8–12', note:'Log top set in Lift Log'},
+      {n:'Machine Chest Press or Smith Bench', s:'3×10–12'},
+      {n:'Incline Dumbbell Press', s:'3×10–12'},
+      {n:'Cable Flyes', s:'3×12–15', note:'Drop set on final set'} ]},
+    {tag:'Triceps', items:[
+      {n:'Cable Rope Pushdowns', s:'3×12'},
+      {n:'Overhead Cable Extensions (light)', s:'3×12'} ]},
+    {tag:'Core', items:[ {n:'Dead Bugs or Plank', s:'3 rounds'} ]},
+    {tag:'Cardio', items:[ {n:'Incline walk 8–12%, Zone 2', s:'30–40 min'} ]}
+  ]},
+  {short:'Legs', title:'Day 2 — Legs', groups:[
+    {tag:'Warm-up', items:[ {n:'Bike', s:'10–15 min'} ]},
+    {tag:'Legs', items:[
+      {n:'Leg Press', s:'4×10', note:'Log top set'},
+      {n:'Hack Squat', s:'3×12', note:'No bar on neck'},
+      {n:'Leg Curl Machine', s:'3×12–15', note:'BH4 / MH4 / S3'},
+      {n:'Leg Extension Machine', s:'3×12–15', note:'BH4 / MH1 / S3 · drop set last set'},
+      {n:'Inner/Outer Thigh', s:'3×12–15'},
+      {n:'Seated or Leg Press Calf Raises', s:'3×15'},
+      {n:'Hip Thrusts', s:'3×10'} ]},
+    {tag:'Core', items:[ {n:'Side Plank + Front Plank', s:'3 rounds'} ]},
+    {tag:'Cardio', items:[ {n:'Incline walk or bike intervals', s:'20–30 min'} ]}
+  ]},
+  {short:'Back/Bi', title:'Day 3 — Back & Biceps', groups:[
+    {tag:'Warm-up', items:[ {n:'Band pull-aparts · face pulls · scap squeezes', s:'5 min'} ]},
+    {tag:'Back', items:[
+      {n:'Neutral-Grip Lat Pulldown', s:'4×10', note:'Log top set'},
+      {n:'Close-Grip Lat Pulldown', s:'4×10'},
+      {n:'Chest-Supported Row', s:'4×8–12'},
+      {n:'Single-Arm DB Row (chest supported)', s:'3×10/side'},
+      {n:'Seated Cable Row (upright)', s:'3×10–12'},
+      {n:'Rear Delt Fly', s:'3×10', note:'Seat: 5 notches visible'},
+      {n:'Back Extensions', s:'2×12', note:'Skip if nerve symptoms'} ]},
+    {tag:'Biceps', items:[
+      {n:'EZ Bar Curl', s:'3×10'},
+      {n:'Hammer Curls', s:'3×10', note:'Drop set last set'} ]},
+    {tag:'Cardio', items:[ {n:'Incline walk or low-intensity row', s:'30 min'} ]}
+  ]},
+  {short:'Delts/Arms', title:'Day 4 — Shoulders & Arms', groups:[
+    {tag:'Warm-up', items:[ {n:'Face pulls · band rotations · scap retraction', s:'5 min'} ]},
+    {tag:'Shoulders', items:[
+      {n:'Seated DB Shoulder Press (neutral grip)', s:'4×8–12', note:'No barbell OHP · log top set'},
+      {n:'Machine Shoulder Press', s:'3×12'},
+      {n:'Dumbbell Lateral Raise', s:'4×12–15'},
+      {n:'Rear-Delt Flyes (cable or DB)', s:'3×12–15'},
+      {n:'Face Pulls', s:'3×15–20'},
+      {n:'Cable Lateral Raise', s:'3×12–15', note:'Drop set last set'} ]},
+    {tag:'Biceps', items:[
+      {n:'Preacher Curl Machine', s:'3×12'},
+      {n:'Cable Hammer Curl', s:'3×12'} ]},
+    {tag:'Cardio', items:[ {n:'Incline walk', s:'30–40 min'} ]}
+  ]},
+  {short:'Upper Vol', title:'Day 5 — Upper Volume', groups:[
+    {tag:'Warm-up', items:[ {n:'Bike + band work', s:'10 min'} ]},
+    {tag:'Push / Pull', items:[
+      {n:'Machine Chest Press', s:'3×12–15', note:'Lighter than Day 1 — pump work'},
+      {n:'Neutral-Grip Pulldown', s:'3×12–15'},
+      {n:'Chest-Supported Row', s:'3×12–15'},
+      {n:'Cable Flyes', s:'2×15'},
+      {n:'Lateral Raise', s:'3×15'} ]},
+    {tag:'Arms', items:[
+      {n:'Cable Curl', s:'2×15'},
+      {n:'Rope Pushdown', s:'2×15'} ]},
+    {tag:'Core', items:[ {n:'Cable Pallof Press', s:'3×12/side'} ]},
+    {tag:'Cardio', items:[ {n:'Incline walk, Zone 2', s:'30–40 min'} ]}
+  ]}
+];
+
+const START_KG = 106.9, RATE = 0.8, START = new Date(2026,5,12), END = new Date(2026,8,1);
+let currentDay = 0, state = { day:null, done:{} }, weighins = [];
+
+const $ = id => document.getElementById(id);
+const todayKey = () => { const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
+const sessionKey = () => `session:${todayKey()}`;
+
+function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),2200); }
+
+function exId(d,g,i){ return `${d}-${g}-${i}`; }
+
+function totalFor(d){ return PLAN[d].groups.reduce((a,g)=>a+g.items.length,0); }
+function doneFor(d){ return Object.keys(state.done).filter(k=>k.startsWith(d+'-')&&state.done[k]).length; }
+
+function render(){
+  const p = PLAN[currentDay];
+  $('day-title').innerHTML = p.title.replace('&','&amp;');
+  // chips
+  const chips = $('day-chips'); chips.innerHTML='';
+  PLAN.forEach((d,i)=>{
+    const b=document.createElement('button');
+    b.className='day-chip'+(i===currentDay?' active':'')+(doneFor(i)===totalFor(i)&&totalFor(i)>0&&doneFor(i)>0?' complete':'');
+    b.innerHTML=`Day ${i+1}<span class="sub">${d.short}</span><span class="dot"></span>`;
+    b.onclick=()=>{ currentDay=i; render(); };
+    chips.appendChild(b);
+  });
+  // exercises
+  const area = $('exercise-area'); area.innerHTML='';
+  p.groups.forEach((g,gi)=>{
+    const tag=document.createElement('div'); tag.className='section-tag'; tag.textContent=g.tag; area.appendChild(tag);
+    const list=document.createElement('div'); list.className='list';
+    g.items.forEach((it,ii)=>{
+      const id=exId(currentDay,gi,ii);
+      const row=document.createElement('div');
+      row.className='ex'+(state.done[id]?' done':'');
+      row.innerHTML=`<div class="check"><svg viewBox="0 0 24 24"><polyline points="4 13 9 18 20 6"/></svg></div>
+        <div class="ex-body"><div class="ex-name">${it.n}</div>${it.note?`<div class="ex-note">${it.note}</div>`:''}</div>
+        <div class="scheme">${it.s}</div>`;
+      row.onclick=()=>toggle(id);
+      list.appendChild(row);
+    });
+    area.appendChild(list);
+  });
+  // progress
+  const total=totalFor(currentDay), done=doneFor(currentDay);
+  $('prog-text').textContent=`${done} / ${total}`;
+  const fill=$('prog-fill');
+  fill.style.width=(total?Math.round(done/total*100):0)+'%';
+  fill.classList.toggle('full',done===total&&total>0);
+  $('banner').classList.toggle('show',done===total&&total>0);
+  // countdown
+  const days=Math.max(0,Math.ceil((END-new Date())/86400000));
+  const wk=Math.min(11.5,Math.max(0,(new Date()-START)/604800000));
+  const target=(START_KG-RATE*wk).toFixed(1);
+  $('countdown').innerHTML=`<b>${days} days</b> to 1 Sep · target today ≈ <b>${target} kg</b>`;
+}
+
+function toggle(id){
+  state.done[id]=!state.done[id];
+  if(!state.done[id]) delete state.done[id];
+  render();
+  save();
+}
+
+function save(){
+  try{ localStorage.setItem(sessionKey(), JSON.stringify({day:currentDay,done:state.done})); }
+  catch(e){ toast('Save failed — storage blocked'); }
+}
+
+function loadSession(){
+  try{
+    const v=localStorage.getItem(sessionKey());
+    if(v){ const d=JSON.parse(v); state.done=d.done||{}; if(typeof d.day==='number') currentDay=d.day; }
+  }catch(e){ /* no session today yet */ }
+}
+
+function loadWeighins(){
+  try{
+    const v=localStorage.getItem('weighins');
+    if(v) weighins=JSON.parse(v);
+  }catch(e){ weighins=[]; }
+  renderWeigh();
+}
+
+function renderWeigh(){
+  const el=$('weigh-status');
+  const days=Math.max(0,Math.ceil((END-new Date())/86400000));
+  if(!weighins.length){ el.innerHTML=`No weigh-ins logged yet. Start: <b>106.9 kg</b> · Sep 1 target: <b>97.7 kg</b> · ${days} days left.`; return; }
+  const last=weighins[weighins.length-1];
+  const wk=Math.min(11.5,Math.max(0,(new Date(last.d)-START)/604800000));
+  const target=START_KG-RATE*wk;
+  const diff=last.kg-target;
+  const lost=(START_KG-last.kg).toFixed(1);
+  const cls=diff<=0.3?'good':'over';
+  const word=diff<=0.3?'on track':`${diff.toFixed(1)} kg over target`;
+  el.innerHTML=`Last: <b>${last.kg} kg</b> (${last.d}) · lost <b>${lost} kg</b> · <span class="${cls}">${word}</span><br>Sep 1 target: <b>97.7 kg</b>`;
+}
+
+$('weight-save').onclick=()=>{
+  const v=parseFloat($('weight-input').value);
+  if(!v||v<50||v>200){ toast('Enter a weight in kg'); return; }
+  weighins.push({d:todayKey(),kg:v});
+  try{ localStorage.setItem('weighins', JSON.stringify(weighins)); toast('Weigh-in logged'); }
+  catch(e){ toast('Save failed'); weighins.pop(); }
+  $('weight-input').value='';
+  renderWeigh();
+};
+
+$('reset-btn').onclick=()=>{
+  Object.keys(state.done).forEach(k=>{ if(k.startsWith(currentDay+'-')) delete state.done[k]; });
+  render(); save(); toast('Session reset');
+};
+
+loadSession(); render(); loadWeighins();
+</script>
+</body>
+</html>
