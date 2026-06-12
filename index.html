@@ -24,7 +24,7 @@
   .days{display:flex;gap:8px;padding:14px 16px 4px;overflow-x:auto;scrollbar-width:none}
   .days::-webkit-scrollbar{display:none}
   .day-chip{flex:0 0 auto;background:var(--card);border:1px solid var(--line);color:var(--dim);
-    border-radius:14px;padding:10px 14px;font-size:13px;font-weight:700;cursor:pointer;position:relative}
+    border-radius:14px;padding:10px 14px;font-size:13px;font-weight:700;cursor:pointer;position:relative;font-family:inherit}
   .day-chip.active{background:var(--pink);border-color:var(--pink);color:#fff}
   .day-chip .sub{display:block;font-size:10px;font-weight:600;opacity:.75;margin-top:1px}
   .day-chip .dot{position:absolute;top:6px;right:8px;width:7px;height:7px;border-radius:50%;background:var(--done);display:none}
@@ -39,6 +39,9 @@
   .banner{display:none;margin:10px 16px 0;padding:12px 14px;border-radius:12px;background:rgba(47,174,110,.12);
     border:1px solid rgba(47,174,110,.4);color:var(--done);font-weight:700;font-size:14px;text-align:center}
   .banner.show{display:block}
+  .warn{display:none;margin:10px 16px 0;padding:12px 14px;border-radius:12px;background:rgba(232,161,60,.1);
+    border:1px solid rgba(232,161,60,.45);color:var(--amber);font-weight:600;font-size:13px;line-height:1.45}
+  .warn.show{display:block}
 
   .section-tag{padding:16px 16px 6px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);font-weight:700}
   .list{padding:0 12px}
@@ -55,8 +58,14 @@
   .ex.done .ex-name{color:var(--dim);text-decoration:line-through;text-decoration-color:rgba(141,135,130,.6)}
   .ex-meta{font-size:12px;color:var(--dim);margin-top:2px}
   .ex-note{font-size:11px;color:var(--amber);margin-top:2px}
-  .scheme{flex:0 0 auto;font-size:13px;font-weight:800;color:var(--pink);letter-spacing:.02em;white-space:nowrap}
+  .ex-last{font-size:11px;color:var(--dim);margin-top:2px}
+  .ex-last b{color:var(--ink)}
+  .right-col{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+  .scheme{font-size:13px;font-weight:800;color:var(--pink);letter-spacing:.02em;white-space:nowrap}
   .ex.done .scheme{color:var(--dim)}
+  .log-btn{border:1px solid var(--pink);color:var(--pink);background:transparent;border-radius:8px;
+    padding:4px 10px;font-size:11px;font-weight:800;letter-spacing:.06em;cursor:pointer;font-family:inherit}
+  .log-btn.logged{border-color:var(--done);color:var(--done)}
 
   .footer-actions{padding:14px 16px 8px;display:flex;gap:10px}
   .btn{flex:1;padding:13px;border-radius:12px;border:1px solid var(--line);background:var(--card);
@@ -75,6 +84,28 @@
   .weigh-status .good{color:var(--done);font-weight:700}
   .weigh-status .over{color:var(--amber);font-weight:700}
 
+  .overlay{position:fixed;inset:0;background:rgba(10,9,9,.78);display:none;align-items:flex-end;justify-content:center;z-index:40}
+  .overlay.show{display:flex}
+  .sheet{background:var(--card);border:1px solid var(--line);border-bottom:none;border-radius:20px 20px 0 0;
+    width:100%;max-width:520px;padding:20px 18px 28px}
+  .sheet h2{font-size:18px;font-weight:800;margin-bottom:2px}
+  .sheet .sub2{font-size:12px;color:var(--dim);margin-bottom:14px}
+  .field{margin-bottom:12px}
+  .field label{display:block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);font-weight:700;margin-bottom:5px}
+  .field input{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:10px;color:var(--ink);
+    font-size:16px;padding:12px;font-family:inherit}
+  .field input:focus{outline:none;border-color:var(--pink)}
+  .row2{display:flex;gap:10px}
+  .row2 .field{flex:1}
+  .sheet .btn-pink{width:100%;padding:14px;margin-top:4px}
+  .sheet .btn-ghost{width:100%;padding:12px;margin-top:8px;background:none;border:none;color:var(--dim);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
+  .hist{margin:10px 0 4px;font-size:12px;color:var(--dim)}
+  .hist-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--line);font-size:13px}
+  .hist-row b{color:var(--ink)}
+  .trend-up{color:var(--done);font-weight:800}
+  .trend-down{color:var(--amber);font-weight:800}
+  .setup-note{font-size:11px;color:var(--dim);line-height:1.5;margin-top:10px}
+
   .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(80px);background:var(--card2);
     border:1px solid var(--line);color:var(--ink);padding:11px 18px;border-radius:12px;font-size:13px;font-weight:600;
     transition:transform .3s;z-index:50;white-space:nowrap}
@@ -85,7 +116,7 @@
 <body>
 <header>
   <div class="kicker">September 1 Shred</div>
-  <h1 id="day-title">Day 1 — Chest &amp; Triceps</h1>
+  <h1 id="day-title">Day 1</h1>
   <div class="countdown" id="countdown"></div>
 </header>
 
@@ -96,6 +127,7 @@
   <div class="bar"><div class="fill" id="prog-fill"></div></div>
 </div>
 <div class="banner" id="banner">Session complete. Go eat protein.</div>
+<div class="warn" id="strength-warn"></div>
 
 <div id="exercise-area"></div>
 
@@ -109,7 +141,37 @@
     <input type="number" inputmode="decimal" step="0.1" id="weight-input" placeholder="Weight (kg)">
     <button class="btn-pink" id="weight-save">Log</button>
   </div>
-  <div class="weigh-status" id="weigh-status">Loading…</div>
+  <div class="weigh-status" id="weigh-status"></div>
+</div>
+
+<!-- First-run setup -->
+<div class="overlay" id="setup-overlay">
+  <div class="sheet">
+    <h2>Set your numbers</h2>
+    <div class="sub2">Stored only on this phone. Nothing is uploaded.</div>
+    <div class="field"><label>Current weight (kg)</label><input type="number" inputmode="decimal" step="0.1" id="su-start" placeholder="e.g. 105.0"></div>
+    <div class="row2">
+      <div class="field"><label>Weekly loss target (kg)</label><input type="number" inputmode="decimal" step="0.1" id="su-rate" value="0.8"></div>
+      <div class="field"><label>End date</label><input type="date" id="su-end" value="2026-09-01"></div>
+    </div>
+    <button class="btn-pink" id="su-save">Start tracking</button>
+    <div class="setup-note">Weekly targets are drawn as a straight line from today's weight to the end date at your chosen rate. You can re-run setup any time by long-pressing the header title.</div>
+  </div>
+</div>
+
+<!-- Lift log sheet -->
+<div class="overlay" id="log-overlay">
+  <div class="sheet">
+    <h2 id="log-title">Log top set</h2>
+    <div class="sub2" id="log-sub"></div>
+    <div class="row2">
+      <div class="field"><label>Weight (kg)</label><input type="number" inputmode="decimal" step="0.5" id="log-kg"></div>
+      <div class="field"><label>Reps</label><input type="number" inputmode="numeric" id="log-reps"></div>
+    </div>
+    <div class="hist" id="log-hist"></div>
+    <button class="btn-pink" id="log-save">Save</button>
+    <button class="btn-ghost" id="log-cancel">Cancel</button>
+  </div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -119,102 +181,127 @@ const PLAN = [
   {short:'Chest/Tri', title:'Day 1 — Chest & Triceps', groups:[
     {tag:'Warm-up', items:[ {n:'Bike', s:'10–15 min'} ]},
     {tag:'Chest', items:[
-      {n:'Dumbbell Bench Press', s:'4×8–12', note:'Log top set in Lift Log'},
-      {n:'Machine Chest Press or Smith Bench', s:'3×10–12'},
-      {n:'Incline Dumbbell Press', s:'3×10–12'},
-      {n:'Cable Flyes', s:'3×12–15', note:'Drop set on final set'} ]},
+      {n:'Dumbbell Bench Press', s:'4×8–12', log:true},
+      {n:'Machine Chest Press or Smith Bench', s:'3×10–12', log:true},
+      {n:'Incline Dumbbell Press', s:'3×10–12', log:true},
+      {n:'Cable Flyes', s:'3×12–15', note:'Drop set on final set', log:true} ]},
     {tag:'Triceps', items:[
-      {n:'Cable Rope Pushdowns', s:'3×12'},
-      {n:'Overhead Cable Extensions (light)', s:'3×12'} ]},
+      {n:'Cable Rope Pushdowns', s:'3×12', log:true},
+      {n:'Overhead Cable Extensions (light)', s:'3×12', log:true} ]},
     {tag:'Core', items:[ {n:'Dead Bugs or Plank', s:'3 rounds'} ]},
     {tag:'Cardio', items:[ {n:'Incline walk 8–12%, Zone 2', s:'30–40 min'} ]}
   ]},
   {short:'Legs', title:'Day 2 — Legs', groups:[
     {tag:'Warm-up', items:[ {n:'Bike', s:'10–15 min'} ]},
     {tag:'Legs', items:[
-      {n:'Leg Press', s:'4×10', note:'Log top set'},
-      {n:'Hack Squat', s:'3×12', note:'No bar on neck'},
-      {n:'Leg Curl Machine', s:'3×12–15', note:'BH4 / MH4 / S3'},
-      {n:'Leg Extension Machine', s:'3×12–15', note:'BH4 / MH1 / S3 · drop set last set'},
-      {n:'Inner/Outer Thigh', s:'3×12–15'},
-      {n:'Seated or Leg Press Calf Raises', s:'3×15'},
-      {n:'Hip Thrusts', s:'3×10'} ]},
+      {n:'Leg Press', s:'4×10', log:true},
+      {n:'Hack Squat', s:'3×12', note:'No bar on neck', log:true},
+      {n:'Leg Curl Machine', s:'3×12–15', note:'BH4 / MH4 / S3', log:true},
+      {n:'Leg Extension Machine', s:'3×12–15', note:'BH4 / MH1 / S3 · drop set last set', log:true},
+      {n:'Inner/Outer Thigh', s:'3×12–15', log:true},
+      {n:'Seated or Leg Press Calf Raises', s:'3×15', log:true},
+      {n:'Hip Thrusts', s:'3×10', log:true} ]},
     {tag:'Core', items:[ {n:'Side Plank + Front Plank', s:'3 rounds'} ]},
     {tag:'Cardio', items:[ {n:'Incline walk or bike intervals', s:'20–30 min'} ]}
   ]},
   {short:'Back/Bi', title:'Day 3 — Back & Biceps', groups:[
     {tag:'Warm-up', items:[ {n:'Band pull-aparts · face pulls · scap squeezes', s:'5 min'} ]},
     {tag:'Back', items:[
-      {n:'Neutral-Grip Lat Pulldown', s:'4×10', note:'Log top set'},
-      {n:'Close-Grip Lat Pulldown', s:'4×10'},
-      {n:'Chest-Supported Row', s:'4×8–12'},
-      {n:'Single-Arm DB Row (chest supported)', s:'3×10/side'},
-      {n:'Seated Cable Row (upright)', s:'3×10–12'},
-      {n:'Rear Delt Fly', s:'3×10', note:'Seat: 5 notches visible'},
-      {n:'Back Extensions', s:'2×12', note:'Skip if nerve symptoms'} ]},
+      {n:'Neutral-Grip Lat Pulldown', s:'4×10', log:true},
+      {n:'Close-Grip Lat Pulldown', s:'4×10', log:true},
+      {n:'Chest-Supported Row', s:'4×8–12', log:true},
+      {n:'Single-Arm DB Row (chest supported)', s:'3×10/side', log:true},
+      {n:'Seated Cable Row (upright)', s:'3×10–12', log:true},
+      {n:'Rear Delt Fly', s:'3×10', note:'Seat: 5 notches visible', log:true},
+      {n:'Back Extensions', s:'2×12', note:'Skip if nerve symptoms', log:true} ]},
     {tag:'Biceps', items:[
-      {n:'EZ Bar Curl', s:'3×10'},
-      {n:'Hammer Curls', s:'3×10', note:'Drop set last set'} ]},
+      {n:'EZ Bar Curl', s:'3×10', log:true},
+      {n:'Hammer Curls', s:'3×10', note:'Drop set last set', log:true} ]},
     {tag:'Cardio', items:[ {n:'Incline walk or low-intensity row', s:'30 min'} ]}
   ]},
   {short:'Delts/Arms', title:'Day 4 — Shoulders & Arms', groups:[
     {tag:'Warm-up', items:[ {n:'Face pulls · band rotations · scap retraction', s:'5 min'} ]},
     {tag:'Shoulders', items:[
-      {n:'Seated DB Shoulder Press (neutral grip)', s:'4×8–12', note:'No barbell OHP · log top set'},
-      {n:'Machine Shoulder Press', s:'3×12'},
-      {n:'Dumbbell Lateral Raise', s:'4×12–15'},
-      {n:'Rear-Delt Flyes (cable or DB)', s:'3×12–15'},
-      {n:'Face Pulls', s:'3×15–20'},
-      {n:'Cable Lateral Raise', s:'3×12–15', note:'Drop set last set'} ]},
+      {n:'Seated DB Shoulder Press (neutral grip)', s:'4×8–12', note:'No barbell OHP', log:true},
+      {n:'Machine Shoulder Press', s:'3×12', log:true},
+      {n:'Dumbbell Lateral Raise', s:'4×12–15', log:true},
+      {n:'Rear-Delt Flyes (cable or DB)', s:'3×12–15', log:true},
+      {n:'Face Pulls', s:'3×15–20', log:true},
+      {n:'Cable Lateral Raise', s:'3×12–15', note:'Drop set last set', log:true} ]},
     {tag:'Biceps', items:[
-      {n:'Preacher Curl Machine', s:'3×12'},
-      {n:'Cable Hammer Curl', s:'3×12'} ]},
+      {n:'Preacher Curl Machine', s:'3×12', log:true},
+      {n:'Cable Hammer Curl', s:'3×12', log:true} ]},
     {tag:'Cardio', items:[ {n:'Incline walk', s:'30–40 min'} ]}
   ]},
   {short:'Upper Vol', title:'Day 5 — Upper Volume', groups:[
     {tag:'Warm-up', items:[ {n:'Bike + band work', s:'10 min'} ]},
     {tag:'Push / Pull', items:[
-      {n:'Machine Chest Press', s:'3×12–15', note:'Lighter than Day 1 — pump work'},
-      {n:'Neutral-Grip Pulldown', s:'3×12–15'},
-      {n:'Chest-Supported Row', s:'3×12–15'},
-      {n:'Cable Flyes', s:'2×15'},
-      {n:'Lateral Raise', s:'3×15'} ]},
+      {n:'Machine Chest Press (light)', s:'3×12–15', note:'Pump work — lighter than Day 1', log:true},
+      {n:'Neutral-Grip Pulldown (light)', s:'3×12–15', log:true},
+      {n:'Chest-Supported Row (light)', s:'3×12–15', log:true},
+      {n:'Cable Flyes', s:'2×15', log:true},
+      {n:'Lateral Raise', s:'3×15', log:true} ]},
     {tag:'Arms', items:[
-      {n:'Cable Curl', s:'2×15'},
-      {n:'Rope Pushdown', s:'2×15'} ]},
+      {n:'Cable Curl', s:'2×15', log:true},
+      {n:'Rope Pushdown', s:'2×15', log:true} ]},
     {tag:'Core', items:[ {n:'Cable Pallof Press', s:'3×12/side'} ]},
     {tag:'Cardio', items:[ {n:'Incline walk, Zone 2', s:'30–40 min'} ]}
   ]}
 ];
 
-const START_KG = 106.9, RATE = 0.8, START = new Date(2026,5,12), END = new Date(2026,8,1);
-let currentDay = 0, state = { day:null, done:{} }, weighins = [];
+// Pressing lifts watched for decline (right-side / C7 relevance)
+const WATCHED = ['Dumbbell Bench Press','Machine Chest Press or Smith Bench','Seated DB Shoulder Press (neutral grip)'];
+
+let currentDay = 0, state = {done:{}}, weighins = [], lifts = {}, profile = null, logTarget = null;
 
 const $ = id => document.getElementById(id);
 const todayKey = () => { const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
 const sessionKey = () => `session:${todayKey()}`;
-
+const ls = {
+  get(k){ try{ const v=localStorage.getItem(k); return v?JSON.parse(v):null; }catch(e){ return null; } },
+  set(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); return true; }catch(e){ toast('Save failed'); return false; } }
+};
 function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),2200); }
 
-function exId(d,g,i){ return `${d}-${g}-${i}`; }
+function weekNum(){
+  if(!profile) return 1;
+  const start=new Date(profile.startDate);
+  return Math.max(1, Math.floor((new Date()-start)/604800000)+1);
+}
+function targetToday(){
+  if(!profile) return null;
+  const wk=Math.max(0,(new Date()-new Date(profile.startDate))/604800000);
+  const end=Math.max(0,(new Date(profile.endDate)-new Date(profile.startDate))/604800000);
+  return profile.startKg - profile.rate*Math.min(wk,end);
+}
+function endTarget(){
+  if(!profile) return null;
+  const end=Math.max(0,(new Date(profile.endDate)-new Date(profile.startDate))/604800000);
+  return profile.startKg - profile.rate*end;
+}
 
+function exId(d,g,i){ return `${d}-${g}-${i}`; }
 function totalFor(d){ return PLAN[d].groups.reduce((a,g)=>a+g.items.length,0); }
 function doneFor(d){ return Object.keys(state.done).filter(k=>k.startsWith(d+'-')&&state.done[k]).length; }
 
+function lastEntry(name, beforeWk){
+  const arr=(lifts[name]||[]).filter(e=>beforeWk==null||e.wk<beforeWk);
+  return arr.length?arr[arr.length-1]:null;
+}
+
 function render(){
   const p = PLAN[currentDay];
-  $('day-title').innerHTML = p.title.replace('&','&amp;');
-  // chips
+  $('day-title').textContent = p.title;
   const chips = $('day-chips'); chips.innerHTML='';
   PLAN.forEach((d,i)=>{
     const b=document.createElement('button');
-    b.className='day-chip'+(i===currentDay?' active':'')+(doneFor(i)===totalFor(i)&&totalFor(i)>0&&doneFor(i)>0?' complete':'');
+    b.className='day-chip'+(i===currentDay?' active':'')+(doneFor(i)===totalFor(i)&&doneFor(i)>0?' complete':'');
     b.innerHTML=`Day ${i+1}<span class="sub">${d.short}</span><span class="dot"></span>`;
-    b.onclick=()=>{ currentDay=i; render(); };
+    b.onclick=()=>{ currentDay=i; render(); save(); };
     chips.appendChild(b);
   });
-  // exercises
   const area = $('exercise-area'); area.innerHTML='';
+  const wk=weekNum();
   p.groups.forEach((g,gi)=>{
     const tag=document.createElement('div'); tag.className='section-tag'; tag.textContent=g.tag; area.appendChild(tag);
     const list=document.createElement('div'); list.className='list';
@@ -222,75 +309,113 @@ function render(){
       const id=exId(currentDay,gi,ii);
       const row=document.createElement('div');
       row.className='ex'+(state.done[id]?' done':'');
+      const thisWk=(lifts[it.n]||[]).find(e=>e.wk===wk);
+      const prev=lastEntry(it.n, wk);
+      let lastHtml='';
+      if(it.log){
+        if(thisWk) lastHtml=`<div class="ex-last">This week: <b>${thisWk.kg}kg × ${thisWk.reps}</b></div>`;
+        else if(prev) lastHtml=`<div class="ex-last">Last: <b>${prev.kg}kg × ${prev.reps}</b> (wk ${prev.wk}) — beat it</div>`;
+        else lastHtml=`<div class="ex-last">No sets logged yet</div>`;
+      }
       row.innerHTML=`<div class="check"><svg viewBox="0 0 24 24"><polyline points="4 13 9 18 20 6"/></svg></div>
-        <div class="ex-body"><div class="ex-name">${it.n}</div>${it.note?`<div class="ex-note">${it.note}</div>`:''}</div>
-        <div class="scheme">${it.s}</div>`;
-      row.onclick=()=>toggle(id);
+        <div class="ex-body"><div class="ex-name">${it.n}</div>${it.note?`<div class="ex-note">${it.note}</div>`:''}${lastHtml}</div>
+        <div class="right-col"><div class="scheme">${it.s}</div>${it.log?`<button class="log-btn${thisWk?' logged':''}" data-n="${it.n}">${thisWk?'LOGGED':'LOG SET'}</button>`:''}</div>`;
+      row.onclick=(e)=>{ if(e.target.classList.contains('log-btn')){ openLog(it.n); } else toggle(id); };
       list.appendChild(row);
     });
     area.appendChild(list);
   });
-  // progress
   const total=totalFor(currentDay), done=doneFor(currentDay);
   $('prog-text').textContent=`${done} / ${total}`;
   const fill=$('prog-fill');
   fill.style.width=(total?Math.round(done/total*100):0)+'%';
   fill.classList.toggle('full',done===total&&total>0);
   $('banner').classList.toggle('show',done===total&&total>0);
-  // countdown
-  const days=Math.max(0,Math.ceil((END-new Date())/86400000));
-  const wk=Math.min(11.5,Math.max(0,(new Date()-START)/604800000));
-  const target=(START_KG-RATE*wk).toFixed(1);
-  $('countdown').innerHTML=`<b>${days} days</b> to 1 Sep · target today ≈ <b>${target} kg</b>`;
+  renderCountdown(); renderWarn();
+}
+
+function renderCountdown(){
+  if(!profile){ $('countdown').textContent=''; return; }
+  const days=Math.max(0,Math.ceil((new Date(profile.endDate)-new Date())/86400000));
+  $('countdown').innerHTML=`<b>${days} days</b> to go · target today ≈ <b>${targetToday().toFixed(1)} kg</b> · week ${weekNum()}`;
+}
+
+function renderWarn(){
+  const w=$('strength-warn'); const wk=weekNum(); const msgs=[];
+  WATCHED.forEach(name=>{
+    const arr=lifts[name]||[];
+    const byWk={}; arr.forEach(e=>byWk[e.wk]=e);
+    const a=byWk[wk-2],b=byWk[wk-1],c=byWk[wk];
+    const score=e=>e?e.kg*(1+e.reps*0.0333):null; // Epley-ish
+    if(a&&b&&c&&score(c)<score(b)&&score(b)<score(a)){
+      msgs.push(`${name} is down two weeks running.`);
+    }
+  });
+  if(msgs.length){
+    w.innerHTML=`⚠ ${msgs.join(' ')} If the right side is the limiter, stop pushing and get it checked — progressive weakness with your C7 compression needs a GP, not more volume.`;
+    w.classList.add('show');
+  } else w.classList.remove('show');
 }
 
 function toggle(id){
   state.done[id]=!state.done[id];
   if(!state.done[id]) delete state.done[id];
+  render(); save();
+}
+function save(){ ls.set(sessionKey(), {day:currentDay,done:state.done}); }
+
+function openLog(name){
+  logTarget=name;
+  $('log-title').textContent=name;
+  $('log-sub').textContent=`Top working set · week ${weekNum()}`;
+  const thisWk=(lifts[name]||[]).find(e=>e.wk===weekNum());
+  $('log-kg').value=thisWk?thisWk.kg:'';
+  $('log-reps').value=thisWk?thisWk.reps:'';
+  const hist=(lifts[name]||[]).slice(-4).reverse();
+  $('log-hist').innerHTML=hist.length?hist.map((e,i)=>{
+    const prev=hist[i+1];
+    let arrow='';
+    if(prev){ const s=x=>x.kg*(1+x.reps*0.0333); arrow=s(e)>s(prev)?' <span class="trend-up">▲</span>':(s(e)<s(prev)?' <span class="trend-down">▼</span>':''); }
+    return `<div class="hist-row"><span>Week ${e.wk}</span><span><b>${e.kg}kg × ${e.reps}</b>${arrow}</span></div>`;
+  }).join(''):'<div class="hist-row"><span>No history yet</span><span></span></div>';
+  $('log-overlay').classList.add('show');
+}
+$('log-cancel').onclick=()=>$('log-overlay').classList.remove('show');
+$('log-save').onclick=()=>{
+  const kg=parseFloat($('log-kg').value), reps=parseInt($('log-reps').value);
+  if(!kg||!reps){ toast('Enter weight and reps'); return; }
+  const wk=weekNum();
+  if(!lifts[logTarget]) lifts[logTarget]=[];
+  const ex=lifts[logTarget].find(e=>e.wk===wk);
+  if(ex){ ex.kg=kg; ex.reps=reps; ex.d=todayKey(); }
+  else lifts[logTarget].push({wk,kg,reps,d:todayKey()});
+  lifts[logTarget].sort((a,b)=>a.wk-b.wk);
+  ls.set('lifts',lifts);
+  $('log-overlay').classList.remove('show');
+  toast('Set logged');
   render();
-  save();
-}
-
-function save(){
-  try{ localStorage.setItem(sessionKey(), JSON.stringify({day:currentDay,done:state.done})); }
-  catch(e){ toast('Save failed — storage blocked'); }
-}
-
-function loadSession(){
-  try{
-    const v=localStorage.getItem(sessionKey());
-    if(v){ const d=JSON.parse(v); state.done=d.done||{}; if(typeof d.day==='number') currentDay=d.day; }
-  }catch(e){ /* no session today yet */ }
-}
-
-function loadWeighins(){
-  try{
-    const v=localStorage.getItem('weighins');
-    if(v) weighins=JSON.parse(v);
-  }catch(e){ weighins=[]; }
-  renderWeigh();
-}
+};
 
 function renderWeigh(){
   const el=$('weigh-status');
-  const days=Math.max(0,Math.ceil((END-new Date())/86400000));
-  if(!weighins.length){ el.innerHTML=`No weigh-ins logged yet. Start: <b>106.9 kg</b> · Sep 1 target: <b>97.7 kg</b> · ${days} days left.`; return; }
+  if(!profile){ el.textContent='Complete setup first.'; return; }
+  const days=Math.max(0,Math.ceil((new Date(profile.endDate)-new Date())/86400000));
+  if(!weighins.length){ el.innerHTML=`No weigh-ins yet. Start: <b>${profile.startKg} kg</b> · end target: <b>${endTarget().toFixed(1)} kg</b> · ${days} days left.`; return; }
   const last=weighins[weighins.length-1];
-  const wk=Math.min(11.5,Math.max(0,(new Date(last.d)-START)/604800000));
-  const target=START_KG-RATE*wk;
+  const wkAt=Math.max(0,(new Date(last.d)-new Date(profile.startDate))/604800000);
+  const target=profile.startKg-profile.rate*wkAt;
   const diff=last.kg-target;
-  const lost=(START_KG-last.kg).toFixed(1);
+  const lost=(profile.startKg-last.kg).toFixed(1);
   const cls=diff<=0.3?'good':'over';
   const word=diff<=0.3?'on track':`${diff.toFixed(1)} kg over target`;
-  el.innerHTML=`Last: <b>${last.kg} kg</b> (${last.d}) · lost <b>${lost} kg</b> · <span class="${cls}">${word}</span><br>Sep 1 target: <b>97.7 kg</b>`;
+  el.innerHTML=`Last: <b>${last.kg} kg</b> (${last.d}) · lost <b>${lost} kg</b> · <span class="${cls}">${word}</span><br>End target: <b>${endTarget().toFixed(1)} kg</b>`;
 }
 
 $('weight-save').onclick=()=>{
   const v=parseFloat($('weight-input').value);
-  if(!v||v<50||v>200){ toast('Enter a weight in kg'); return; }
+  if(!v||v<30||v>250){ toast('Enter a weight in kg'); return; }
   weighins.push({d:todayKey(),kg:v});
-  try{ localStorage.setItem('weighins', JSON.stringify(weighins)); toast('Weigh-in logged'); }
-  catch(e){ toast('Save failed'); weighins.pop(); }
+  if(ls.set('weighins',weighins)) toast('Weigh-in logged'); else weighins.pop();
   $('weight-input').value='';
   renderWeigh();
 };
@@ -300,7 +425,39 @@ $('reset-btn').onclick=()=>{
   render(); save(); toast('Session reset');
 };
 
-loadSession(); render(); loadWeighins();
+// Setup
+function showSetup(){
+  if(profile){ $('su-start').value=profile.startKg; $('su-rate').value=profile.rate; $('su-end').value=profile.endDate; }
+  $('setup-overlay').classList.add('show');
+}
+$('su-save').onclick=()=>{
+  const startKg=parseFloat($('su-start').value), rate=parseFloat($('su-rate').value), endDate=$('su-end').value;
+  if(!startKg||startKg<30||startKg>250){ toast('Enter your current weight'); return; }
+  if(!rate||rate<=0||rate>1.5){ toast('Rate should be 0.1–1.5 kg/wk'); return; }
+  if(!endDate||new Date(endDate)<=new Date()){ toast('End date must be in the future'); return; }
+  const keepStart = profile ? profile.startDate : todayKey();
+  profile={startKg,rate,endDate,startDate:keepStart};
+  ls.set('profile',profile);
+  $('setup-overlay').classList.remove('show');
+  render(); renderWeigh();
+};
+// Long-press title to re-open setup
+let pressTimer;
+$('day-title').addEventListener('touchstart',()=>{ pressTimer=setTimeout(showSetup,700); });
+$('day-title').addEventListener('touchend',()=>clearTimeout(pressTimer));
+$('day-title').addEventListener('mousedown',()=>{ pressTimer=setTimeout(showSetup,700); });
+$('day-title').addEventListener('mouseup',()=>clearTimeout(pressTimer));
+
+// Boot
+(function(){
+  profile=ls.get('profile');
+  const s=ls.get(sessionKey());
+  if(s){ state.done=s.done||{}; if(typeof s.day==='number') currentDay=s.day; }
+  weighins=ls.get('weighins')||[];
+  lifts=ls.get('lifts')||{};
+  render(); renderWeigh();
+  if(!profile) showSetup();
+})();
 </script>
 </body>
 </html>
