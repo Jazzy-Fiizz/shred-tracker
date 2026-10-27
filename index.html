@@ -382,7 +382,7 @@ function tm(){const w=wk();return w<=4?{s:'5.0 km/h',i:'6%',d:'20 min'}:w<=8?{s:
 function eid(d,g,i){return d+'-'+g+'-'+i;}
 function lw(){return S.weights.length?S.weights[S.weights.length-1].v:BASE;}
 function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1700);}
-function top(s){return parseInt((s.match(/–(\d+)/)||s.match(/× ?(\d+)/)||[])[1]||12);}
+function topReps(s){return parseInt((s.match(/–(\d+)/)||s.match(/× ?(\d+)/)||[])[1]||12);}
 
 function rTrain(){
  const p=PLAN[day],ti=todayIdx();
@@ -418,7 +418,7 @@ function openLog(d,name,sch){
  const all=S.sets[cur.k]||[],prev=all.filter(e=>e.d!==dkey()),last=prev[prev.length-1];
  document.getElementById('lt').textContent=name;
  document.getElementById('ls').textContent=sch;
- const t=top(sch),p=document.getElementById('lp');
+ const t=topReps(sch),p=document.getElementById('lp');
  p.textContent=last?(last.reps>=t?`Hit ${t} reps last time at ${last.kg}kg — add 2.5kg today.`:`Last time ${last.kg}kg × ${last.reps}. Stay there until you hit ${t} reps.`):`First time: pick a weight you could do 2–3 more reps with.`;
  document.getElementById('ik').value=last?last.kg:'';
  document.getElementById('ir').value='';
